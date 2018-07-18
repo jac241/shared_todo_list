@@ -1,0 +1,6 @@
+%h2= @list.name
+%label{:for => :list_url}
+  Link to this list:
+%input{:id => :list_url, :type => 'textarea', :readonly => true, value: slugged_list_url(@list, @list.slug)}
+%button
+  Copy Link

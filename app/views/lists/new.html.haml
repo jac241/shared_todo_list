@@ -1,0 +1,8 @@
+= form_with model: @list do |f|
+  %h2 Pick a name for your list
+  = f.label :name
+  = f.text_field :name
+
+  %h3 When you ready to share, click publish to get a link to your list
+  = f.submit 'Publish'
+
