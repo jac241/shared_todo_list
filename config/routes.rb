@@ -3,5 +3,8 @@ Rails.application.routes.draw do
   get 'lists/:id/:slug', to: 'lists#show', as: :slugged_list
   resources :lists
 
+  get '/privacy', to: 'home#privacy'
+  get '/terms', to: 'home#terms'
+
   root to: 'lists#index'
 end

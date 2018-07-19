@@ -1,6 +1,7 @@
 %h2= @list.name
-%label{:for => :list_url}
-  Link to this list:
-%input{:id => :list_url, :type => 'textarea', :readonly => true, value: slugged_list_url(@list, @list.slug)}
-%button
-  Copy Link
+.form-inline
+  %label{:for => :list_url, :class => 'mr-2' }
+    Link to this list:
+  %input{:id => :list_url, :type => 'textarea', :readonly => true, value: slugged_list_url(@list, @list.slug), :class => 'form-control mr-sm-2'}
+  %button.btn.btn-primary
+    Copy Link
