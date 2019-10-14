@@ -8,11 +8,14 @@
 // layout file, like app/views/layouts/application.html.erb
 
 require("@rails/ujs").start()
-require("turbolinks").start()
+import 'turbolinks'
 require("channels")
-require('src/cocoon')
 
-console.log('Hello World from Webpacker')
+import $ from 'jquery'
+global.$ = $
+global.jQuery = $
+
+require('src/cocoon')
 
 import 'bootstrap'
 import 'data-confirm-modal'
@@ -27,7 +30,3 @@ import { definitionsFromContext } from "stimulus/webpack-helpers"
 const application = Application.start()
 const context = require.context("controllers", true, /.js$/)
 application.load(definitionsFromContext(context))
-
-import $ from 'jquery'
-global.$ = $
-global.jQuery = $
