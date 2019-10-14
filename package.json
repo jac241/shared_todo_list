@@ -2,9 +2,20 @@
   "name": "shared_todo_list",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5"
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@client-side-validations/simple-form": "^0.1.0",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/ujs": "^6.0.0",
+    "@rails/webpacker": "4.0.7",
+    "bootstrap": "4.3.1",
+    "data-confirm-modal": "^1.6.2",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
+    "postcss-cssnext": "^3.1.0",
+    "stimulus": "^1.1.1",
+    "turbolinks": "^5.2.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "webpack-dev-server": "3.8.2"
   }
 }

@@ -1,10 +1,3 @@
-= form_with model: @list do |f|
-  %h2 Pick a name for your list
-  .form_group
-    = f.label :name
-    = f.text_field :name, class: 'form-control'
-
-  .form_group
-    = f.label 'When you ready to share, click publish to get a link to your list'
-    = f.submit 'Publish', class: 'btn btn-primary'
+%h2 New Todo List
+= render 'form'
 

@@ -1,4 +1,10 @@
 %h2= @list.name
+
+%ul
+  - @list.tasks.each do |task|
+    %li
+      = render task
+
 .form-inline
   %label{:for => :list_url, :class => 'mr-2' }
     Link to this list:

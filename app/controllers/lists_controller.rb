@@ -13,6 +13,8 @@ class ListsController < ApplicationController
     respond_to do |format|
       if @list.save
         format.js { redirect_to slugged_list_path(@list, @list.slug), notice: 'Todo list created successfully!' }
+      else
+        format.js { render :new }
       end
     end
   end
@@ -24,6 +26,6 @@ class ListsController < ApplicationController
   private
 
   def create_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, tasks_attributes: :name)
   end
 end

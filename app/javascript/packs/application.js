@@ -7,4 +7,27 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
+require("@rails/ujs").start()
+require("turbolinks").start()
+require("channels")
+require('src/cocoon')
+
 console.log('Hello World from Webpacker')
+
+import 'bootstrap'
+import 'data-confirm-modal'
+import './src/application.scss'
+
+import '@client-side-validations/client-side-validations'
+import '@client-side-validations/simple-form/dist/simple-form.bootstrap4'
+
+import { Application } from "stimulus"
+import { definitionsFromContext } from "stimulus/webpack-helpers"
+
+const application = Application.start()
+const context = require.context("controllers", true, /.js$/)
+application.load(definitionsFromContext(context))
+
+import $ from 'jquery'
+global.$ = $
+global.jQuery = $
