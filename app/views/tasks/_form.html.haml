@@ -1,0 +1,4 @@
+= simple_form_for [@list, @task], wrapper: :inline_form, validate: true,
+  remote: true, html: { class: 'form-inline mb-2 mt-2' } do |f|
+  = f.input :name, placeholder: 'Add task'
+

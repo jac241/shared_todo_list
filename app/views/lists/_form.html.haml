@@ -1,9 +1,3 @@
 = simple_form_for @list, validate: true, remote: true do |f|
   = f.input :name
-  %h4 Add tasks
-  #tasks
-    = f.simple_fields_for :tasks, @list.tasks.new, wrapper: :inline_form do |tasks_form|
-      = render 'task_fields', f: tasks_form
-      .links
-        = link_to_add_association 'add', f, :tasks
   = f.button :submit, class: 'btn btn-primary', disable_with: 'Publishing...'

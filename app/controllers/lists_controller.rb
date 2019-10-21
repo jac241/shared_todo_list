@@ -21,6 +21,8 @@ class ListsController < ApplicationController
 
   def show
     @list = List.find(params[:id])
+    @tasks = @list.tasks.order(created_at: :asc)
+    @task = @list.tasks.new
   end
 
   private

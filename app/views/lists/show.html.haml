@@ -1,13 +1,17 @@
-%h2= @list.name
+.card
+  .card-header.pt-3
+    .row
+      .col-7
+        %h2.text-break= @list.name
+      .col-5
+        %button.btn.btn-primary.float-right
+          Copy Link to List
 
-%ul
-  - @list.tasks.each do |task|
-    %li
-      = render task
+  .card-body
+    %ul#tasks.list-group-flush
+      - @tasks.each do |task|
+        = render task
 
-.form-inline
-  %label{:for => :list_url, :class => 'mr-2' }
-    Link to this list:
-  %input{:id => :list_url, :type => 'textarea', :readonly => true, value: slugged_list_url(@list, @list.slug), :class => 'form-control mr-sm-2'}
-  %button.btn.btn-primary
-    Copy Link
+  .card-footer
+    = render partial: 'tasks/form', object:  @list.tasks.new
+
