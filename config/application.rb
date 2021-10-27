@@ -19,6 +19,17 @@ Bundler.require(*Rails.groups)
 
 module SharedTodoList
   class Application < Rails::Application
+    # In order for Graphiti to generate links, you need to set the routes host.
+    # When not explicitly set, via the HOST env var, this will fall back to
+    # the rails server settings.
+    # Rails::Server is not defined in console or rake tasks, so this will only
+    # use those defaults when they are available.
+    routes.default_url_options[:host] = ENV.fetch('HOST') do
+      if defined?(Rails::Server)
+        argv_options = Rails::Server::Options.new.parse!(ARGV)
+        "http://#{argv_options[:Host]}:#{argv_options[:Port]}"
+      end
+    end
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
@@ -29,5 +40,15 @@ module SharedTodoList
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.debug_exception_response_format = :api
+
+    config.middleware.insert_before ActionDispatch::Static, Rack::Cors do
+      allow do
+        origins '*'
+        resource '/api/v1/*', :headers => :any, :methods => [
+          :get, :post, :options, :put, :patch, :delete
+        ]
+      end
+    end
   end
 end

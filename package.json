@@ -12,8 +12,10 @@
     "jquery": "^3.4.1",
     "popper.js": "^1.15.0",
     "postcss-cssnext": "^3.1.0",
+    "qs": "^6.10.1",
     "stimulus": "https://github.com/stimulusjs/dev-builds/archive/b8cc8c4/stimulus.tar.gz",
-    "turbolinks": "5.3.0-beta.1"
+    "turbolinks": "5.3.0-beta.1",
+    "use-client-router": "^1.0.4"
   },
   "devDependencies": {
     "webpack-dev-server": "3.8.2"

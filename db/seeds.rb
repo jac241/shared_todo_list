@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+[Task, List].each(&:delete_all)
+
+100.times do
+  list = List.create!(name: Faker::Book.title)
+
+  rand(5..20).times do
+    list.tasks.create!(name: Faker::Lorem.sentence)
+  end
+end
