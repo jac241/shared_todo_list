@@ -1,4 +1,5 @@
 import axios from "axios"
+console.log(process.env.NEXT_PUBLIC_API_HOST)
 
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_HOST,
