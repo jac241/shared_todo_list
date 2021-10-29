@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons"
 import arrayMove from "array-move"
 
-import styles from "./SortableListItems.module.css"
+import styles from "./SortableListItems.module.scss"
 import Task from "./Task"
 import NewItem from "./lists/NewItem"
 import { changeTaskPostition, owningListPathname } from "../data/tasks"
@@ -83,7 +83,10 @@ const DragHandle = sortableHandle((props) => (
 ))
 
 const TaskItem = sortableElement((props) => (
-  <li className="d-flex flex-row p-2" style={{ columnGap: "1rem" }}>
+  <li
+    className={"d-flex flex-row p-2 " + styles.task}
+    style={{ columnGap: "1rem" }}
+  >
     <DragHandle />
     <Task {...props} />
   </li>
