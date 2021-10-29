@@ -1,8 +1,7 @@
 import axios from "axios"
 
 const client = axios.create({
-  baseURL: "http://192.168.200.192:5000",
-  //baseURL: "https:shared-todo-list.herokuapp.com",
+  baseURL: process.env.NEXT_PUBLIC_API_HOST,
   timeout: 15000,
   headers: {
     "Content-Type": "application/vnd.api+json",
