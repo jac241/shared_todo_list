@@ -1,14 +1,13 @@
 import Layout from '../components/layout'
 import Spinner from 'react-bootstrap/Spinner'
-import axios from 'axios'
 import useSWR from 'swr'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import qs from 'qs'
 
-axios.defaults.baseURL = "http://localhost:5000"
+import client from '../data/http'
 
-const fetcher = url => axios.get(url).then(r => r.data)
+const fetcher = url => client.get(url).then(r => r.data)
 
 export default function Home() {
   const router = useRouter()
@@ -23,7 +22,12 @@ export default function Home() {
 
 const ListsIndex = ({ page }) => {
   const pageQuery = page || { number: 1, page_size: 40 }
-  const queryString = qs.stringify({ page: { ...pageQuery }, fields: { lists: "name" } })
+  const queryString = qs.stringify(
+    { page: { ...pageQuery },
+      fields: { lists: "name" },
+      sort: "-created_at",
+    }
+  )
 
   const { data: listsResource, error } = useSWR(`/api/v1/lists?${queryString}`, fetcher)
 

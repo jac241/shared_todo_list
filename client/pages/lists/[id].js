@@ -1,19 +1,19 @@
 import axios from 'axios'
 import qs from 'qs'
 import { useRouter } from 'next/router'
-import Spinner from 'react-bootstrap/Spinner'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Placeholder from 'react-bootstrap/Placeholder'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import useSWR from 'swr'
-import { useState } from 'react'
 
 import Layout from '../../components/layout'
+import Task from '../../components/Task'
+import SortableListItems from '../../components/SortableListItems'
+import client from '../../data/http'
 
-axios.defaults.baseURL = "http://localhost:5000"
-const fetcher = url => axios.get(url).then(r => r.data)
-
-
+const fetcher = url => client.get(url).then(r => r.data)
 
 const listURL = (id) => {
   const queryString = qs.stringify({ include: "tasks"})
@@ -24,24 +24,22 @@ function ListPage({ listResource }) {
   return <Layout><List listResource={listResource} /></Layout>
 }
 
-const List = (props) => {
+const List = () => {
   const router = useRouter()
   const { id } = router.query
 
-  const queryString = qs.stringify({ include: "tasks"})
   const { data: listResource, error } = useSWR(
-    `/api/v1/lists/${id}?${queryString}`,
+    id && listURL(id),
     fetcher,
-    { fallbackData: props.listResource }
   )
-
 
   if (error) {
     console.log(error)
     return <div>Error!</div>
   }
-  //if (!listResource) { return <Spinner animation="border" />}
+  if (!listResource) { return <SkeletonList />}
 
+  console.log(listResource)
   const tasks = listResource.included
 
   return (
@@ -52,41 +50,29 @@ const List = (props) => {
         </h3>
       </Card.Header>
       <Card.Body>
-        <ListGroup>
-          {
-            tasks.map((task) => (
-              <Task key={task.id} task={task} />
-            ))
-          }
-        </ListGroup>
+        <SortableListItems listItems={tasks} />
       </Card.Body>
     </Card>
   )
 }
 
-const Task = ({ task }) => {
-  const [checked, setChecked] = useState(true)
-
+const SkeletonList = () => {
   return (
-    <Form.Group>
-      <Form.Check
-        type="checkbox"
-        label={ task.attributes.name }
-        checked={checked}
-        onClick={ () => setChecked(!checked) }
-        onChange={ () => {} }
-      />
-    </Form.Group>
-  )
-}
-
-ListPage.getInitialProps = async (ctx) => {
-  console.log(ctx.query.id)
-  const listResource = await fetcher(listURL(ctx.query.id))
-
-  return {
-    listResource
-  }
-}
+    <Card>
+      <Card.Header>
+        <Placeholder as='h3' animation="glow" />
+      </Card.Header>
+      <Card.Body>
+        {
+          [...Array(10).keys()].map((i) => (
+            <Form.Group key={i} >
+              <Placeholder xs={6} animation="glow" />
+            </Form.Group>
+          ))
+        }
+      </Card.Body>
+    </Card>
+  );
+};
 
 export default ListPage

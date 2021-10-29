@@ -4,9 +4,9 @@ module Api
       def index
         lists = ListResource.all(params)
 
-        if stale?(lists.data)
+        #if stale?(lists.data)
           respond_with(lists)
-        end
+        #end
       end
 
       def show
