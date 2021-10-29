@@ -12,6 +12,7 @@ const Task = (props) => {
   const [mode, setMode] = useState(props.mode)
   const { mutate } = useSWRConfig()
   const checkBoxId = `task_${task.id}_checkbox`
+  const checkRef = useRef(null)
 
   const handleClosingEditMode = async (containerElement) => {
     const newText = containerElement.children[0].value
@@ -28,13 +29,7 @@ const Task = (props) => {
   switch (mode) {
     case "display":
       inner = (
-        <label
-          className="form-check-label"
-          htmlFor={checkBoxId}
-          onClick={() => {
-            setMode("edit")
-          }}
-        >
+        <label className="form-check-label" htmlFor={checkBoxId}>
           {text}
         </label>
       )
@@ -58,9 +53,17 @@ const Task = (props) => {
   }
 
   return (
-    <Form.Group>
+    <Form.Group
+      style={{ flexGrow: 1 }}
+      onClick={(event) => {
+        if (!checkRef.current.contains(event.target)) {
+          setMode("edit")
+        }
+      }}
+    >
       <div className="form-check">
         <input
+          ref={checkRef}
           id={checkBoxId}
           className="form-check-input"
           type="checkbox"
