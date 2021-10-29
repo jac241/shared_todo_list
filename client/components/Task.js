@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form"
 
 import { patchTask, toggleTaskCompleted } from "../data/tasks"
 import { pathname } from "../data/http"
+import styles from "./Task.module.scss"
 
 const Task = (props) => {
   const { task } = props
@@ -29,7 +30,10 @@ const Task = (props) => {
   switch (mode) {
     case "display":
       inner = (
-        <label className="form-check-label" htmlFor={checkBoxId}>
+        <label
+          className={"form-check-label " + styles.task_text}
+          htmlFor={checkBoxId}
+        >
           {text}
         </label>
       )
@@ -38,6 +42,7 @@ const Task = (props) => {
       inner = (
         <DetectClickOutside onOutsideClick={handleClosingEditMode}>
           <Form.Control
+            className={styles.task_text__edit}
             autoFocus
             as="textarea"
             value={text}
