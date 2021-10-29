@@ -2,7 +2,7 @@ class Task < ApplicationRecord
   belongs_to :list, touch: true
   acts_as_list scope: :list
 
-  validates :name, presence: true
+  validates :name, presence: true, allow_blank: true
 
   def completed=(was_completed)
     if was_completed

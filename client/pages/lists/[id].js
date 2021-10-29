@@ -50,7 +50,7 @@ const List = () => {
         </h3>
       </Card.Header>
       <Card.Body>
-        <SortableListItems listItems={tasks} />
+        <SortableListItems parentList={listResource.data} listItems={tasks} />
       </Card.Body>
     </Card>
   )
