@@ -25,6 +25,7 @@ const SortableListItems = (props) => {
   const { mutate } = useSWRConfig()
 
   const onSortStart = () => {
+    document.body.style = "overscroll-behavior: contain;"
     setBeingSorted(true)
   }
 
@@ -45,6 +46,7 @@ const SortableListItems = (props) => {
       mutate(owningListPathname(updatedTaskResource.data))
     } finally {
       setBeingSorted(false)
+      document.body.style = ""
     }
   }
 
