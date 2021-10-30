@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   sortableContainer,
   sortableElement,
@@ -49,11 +49,26 @@ const SortableListItems = (props) => {
     }
   }
 
-  console.log(newItem?.id, newItem)
-  const onNewItemCreated = (newItemResource) => {
-    setNewItem(newItemResource.data)
-    setListItems([...listItems, newItemResource.data])
-  }
+  const onNewItemCreated = useCallback(
+    (newItemResource) => {
+      setNewItem(newItemResource.data)
+      setListItems((currentListItems) => [
+        ...currentListItems,
+        newItemResource.data,
+      ])
+    },
+    [listItems]
+  )
+
+  const handleTaskDestroyed = useCallback(
+    (task) => {
+      setListItems((currentListItems) =>
+        currentListItems.filter((item) => item.id !== task.id)
+      )
+    },
+    [listItems]
+  )
+
   return (
     <SortableContainer
       onSortStart={onSortStart}
@@ -67,6 +82,7 @@ const SortableListItems = (props) => {
           index={index}
           task={listItem}
           mode={newItem?.id === listItem?.id ? "edit" : "display"}
+          onTaskDestroyed={handleTaskDestroyed}
         />
       ))}
       <NewItem

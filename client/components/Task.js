@@ -3,13 +3,13 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 
-import { patchTask, toggleTaskCompleted } from "../data/tasks"
+import { patchTask, toggleTaskCompleted, destroyTask } from "../data/tasks"
 import { pathname } from "../data/http"
 import styles from "./Task.module.scss"
 import sortableListItemStyles from "./SortableListItems.module.scss"
 
 const Task = (props) => {
-  const { task } = props
+  const { task, onTaskDestroyed } = props
   const [checked, setChecked] = useState(task.attributes.completed)
   const [text, setText] = useState(task.attributes.name)
   const [mode, setMode] = useState(props.mode)
@@ -89,13 +89,7 @@ const Task = (props) => {
           {inner}
         </div>
       </Form.Group>
-      <Button
-        className={sortableListItemStyles.delete}
-        size="sm"
-        variant="outline-secondary"
-      >
-        X
-      </Button>
+      <DeleteTaskButton task={task} onTaskDestroyed={onTaskDestroyed} />
     </>
   )
 }
@@ -124,6 +118,29 @@ const useOutsideAlerter = (ref, callback) => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [ref])
+}
+
+const DeleteTaskButton = ({ task, onTaskDestroyed }) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleClick = useCallback(async () => {
+    console.log("cliccked")
+    setIsLoading(true)
+    await destroyTask(task)
+    onTaskDestroyed(task)
+  }, [task])
+
+  return (
+    <Button
+      className={sortableListItemStyles.delete}
+      size="sm"
+      variant="outline-secondary"
+      disabled={isLoading}
+      onClick={handleClick}
+    >
+      X
+    </Button>
+  )
 }
 
 export default Task

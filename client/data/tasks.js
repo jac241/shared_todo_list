@@ -43,3 +43,8 @@ export const createNewTask = async (parentList) => {
   })
   return response.data
 }
+
+export const destroyTask = async (task) => {
+  const response = await client.delete(`/api/v1/tasks/${task.id}`)
+  return response.data
+}
