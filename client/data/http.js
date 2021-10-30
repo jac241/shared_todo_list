@@ -10,6 +10,14 @@ const client = axios.create({
 })
 
 export const fetcher = (url) => client.get(url).then((r) => r.data)
-export const pathname = (url) => new URL(url).pathname
+export const pathname = (url) => {
+  try {
+    return new URL(url).pathname
+  } catch (TypeError) {
+    // log and assume it's already a path
+    console.log(url)
+    return url
+  }
+}
 
 export default client
