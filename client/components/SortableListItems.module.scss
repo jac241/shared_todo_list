@@ -4,7 +4,20 @@
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
+.delete {
+  height: fit-content;
+}
+
+.task {
+  .delete {
+    visibility: hidden;
+  }
+}
 
 .task:hover {
   box-shadow: 0 -1px 0 #000 inset, 0 1px 0 #000 inset;
+
+  .delete {
+    visibility: visible;
+  }
 }

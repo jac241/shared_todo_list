@@ -1,10 +1,12 @@
 import { useSWRConfig } from "swr"
 import { useCallback, useEffect, useRef, useState } from "react"
+import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 
 import { patchTask, toggleTaskCompleted } from "../data/tasks"
 import { pathname } from "../data/http"
 import styles from "./Task.module.scss"
+import sortableListItemStyles from "./SortableListItems.module.scss"
 
 const Task = (props) => {
   const { task } = props
@@ -58,33 +60,43 @@ const Task = (props) => {
   }
 
   return (
-    <Form.Group
-      style={{ flexGrow: 1 }}
-      onClick={(event) => {
-        if (!checkRef.current.contains(event.target)) {
-          setMode("edit")
-        }
-      }}
-    >
-      <div className="form-check">
-        <input
-          ref={checkRef}
-          id={checkBoxId}
-          className="form-check-input"
-          type="checkbox"
-          checked={checked}
-          onClick={async () => {
-            setChecked(!checked)
-            await toggleTaskCompleted(task)
-            mutate(
-              pathname(task.relationships.list.links.related) + "?include=tasks"
-            )
-          }}
-          onChange={() => {}}
-        />
-        {inner}
-      </div>
-    </Form.Group>
+    <>
+      <Form.Group
+        style={{ flexGrow: 1 }}
+        onClick={(event) => {
+          if (!checkRef.current.contains(event.target)) {
+            setMode("edit")
+          }
+        }}
+      >
+        <div className="form-check">
+          <input
+            ref={checkRef}
+            id={checkBoxId}
+            className="form-check-input"
+            type="checkbox"
+            checked={checked}
+            onClick={async () => {
+              setChecked(!checked)
+              await toggleTaskCompleted(task)
+              mutate(
+                pathname(task.relationships.list.links.related) +
+                  "?include=tasks"
+              )
+            }}
+            onChange={() => {}}
+          />
+          {inner}
+        </div>
+      </Form.Group>
+      <Button
+        className={sortableListItemStyles.delete}
+        size="sm"
+        variant="outline-secondary"
+      >
+        X
+      </Button>
+    </>
   )
 }
 

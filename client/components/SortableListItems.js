@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   sortableContainer,
   sortableElement,
@@ -9,14 +9,15 @@ import { faGripVertical } from "@fortawesome/free-solid-svg-icons"
 import arrayMove from "array-move"
 
 import styles from "./SortableListItems.module.scss"
+import taskStyles from "./Task.module.scss"
 import Task from "./Task"
 import NewItem from "./lists/NewItem"
 import { changeTaskPostition, owningListPathname } from "../data/tasks"
 import { useSWRConfig } from "swr"
 
-const SortableContainer = sortableContainer(({ children, beingSorted }) => (
-  <ul className={beingSorted ? styles.sorting : ""}> {children} </ul>
-))
+const SortableContainer = sortableContainer(({ children, beingSorted }) => {
+  return <ul className={beingSorted ? styles.sorting : ""}> {children} </ul>
+})
 
 const SortableListItems = (props) => {
   const [beingSorted, setBeingSorted] = useState(false)
@@ -25,7 +26,6 @@ const SortableListItems = (props) => {
   const { mutate } = useSWRConfig()
 
   const onSortStart = () => {
-    document.body.style = "overscroll-behavior: contain;"
     setBeingSorted(true)
   }
 
@@ -46,7 +46,6 @@ const SortableListItems = (props) => {
       mutate(owningListPathname(updatedTaskResource.data))
     } finally {
       setBeingSorted(false)
-      document.body.style = ""
     }
   }
 
