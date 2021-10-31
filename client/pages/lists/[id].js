@@ -9,7 +9,11 @@ import client from "../../data/http"
 import SkeletonList from "../../components/lists/SkeletonList"
 import { useCallback } from "react"
 import arrayMove from "array-move"
-import { changeTaskPostition, destroyTask } from "../../data/tasks"
+import {
+  changeTaskPostition,
+  createNewTask,
+  destroyTask,
+} from "../../data/tasks"
 
 const fetcher = (url) => client.get(url).then((r) => r.data)
 
@@ -66,6 +70,12 @@ const List = () => {
     [listResource, listItems]
   )
 
+  const handleTaskCreated = useCallback(async () => {
+    const newItemResource = await createNewTask(listResource.data)
+    mutate({ ...listResource, included: [...listItems, newItemResource.data] })
+    return newItemResource
+  }, [listResource, listItems])
+
   if (error) {
     console.log(error)
     return <div>Error! {error}</div>
@@ -85,6 +95,7 @@ const List = () => {
           parentList={listResource.data}
           listItems={listItems}
           onTaskDestroyed={handleTaskDestroyed}
+          onTaskCreated={handleTaskCreated}
         />
       </Card.Body>
     </Card>

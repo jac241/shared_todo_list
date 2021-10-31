@@ -9,6 +9,14 @@ import { Editor } from "react-draft-wysiwyg"
 
 const TaskTextEditor = ({ html, onEditingFinished }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
+
+  const handleClosingEditMode = useCallback(() => {
+    const html = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    ).trim()
+    onEditingFinished(html)
+  }, [editorState, onEditingFinished])
+
   useEffect(() => {
     const contentBlock = htmlToDraft(html)
     if (contentBlock) {
@@ -17,14 +25,8 @@ const TaskTextEditor = ({ html, onEditingFinished }) => {
       )
       setEditorState(EditorState.createWithContent(contentState))
     }
+    setEditorState((editorState) => EditorState.moveFocusToEnd(editorState))
   }, [])
-
-  const handleClosingEditMode = useCallback(() => {
-    const html = draftToHtml(
-      convertToRaw(editorState.getCurrentContent())
-    ).trim()
-    onEditingFinished(html)
-  }, [editorState, onEditingFinished])
 
   return (
     <DetectClickOutside onOutsideClick={handleClosingEditMode}>

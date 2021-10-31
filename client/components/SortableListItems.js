@@ -43,16 +43,11 @@ const SortableListItems = (props) => {
     [listItems]
   )
 
-  const onNewItemCreated = useCallback(
-    (newItemResource) => {
-      setNewItem(newItemResource.data)
-      setListItems((currentListItems) => [
-        ...currentListItems,
-        newItemResource.data,
-      ])
-    },
-    [listItems]
-  )
+  const onNewItemCreated = useCallback(async () => {
+    const newItemResource = await props.onTaskCreated()
+    console.log(newItemResource)
+    setNewItem(newItemResource.data)
+  }, [setNewItem])
 
   return (
     <SortableContainer
@@ -71,10 +66,7 @@ const SortableListItems = (props) => {
           beingSorted={beingSorted}
         />
       ))}
-      <NewItem
-        parentList={props.parentList}
-        onNewItemCreated={onNewItemCreated}
-      />
+      <NewItem onNewItemCreated={onNewItemCreated} />
     </SortableContainer>
   )
 }

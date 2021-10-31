@@ -3,20 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import Spinner from "react-bootstrap/Spinner"
 
-import { createNewTask, listWithTasksPathname } from "../../data/tasks"
 import { useState } from "react"
-import { useSWRConfig } from "swr"
 
-const NewItem = ({ parentList, onNewItemCreated }) => {
+const NewItem = ({ onNewItemCreated }) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { mutate } = useSWRConfig()
 
   const createBlankTask = async () => {
     setIsLoading(true)
     try {
-      const newItemResource = await createNewTask(parentList)
-      mutate(listWithTasksPathname(parentList.id))
-      onNewItemCreated(newItemResource)
+      onNewItemCreated()
     } finally {
       setIsLoading(false)
     }
