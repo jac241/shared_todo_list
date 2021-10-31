@@ -22,7 +22,7 @@ export const changeTaskPostition = async (task, newPosition) => {
 }
 
 export const owningListPathname = (task) =>
-  pathname(`${task.relationships.list.links.related}?include=tasks`)
+  `${pathname(task.relationships.list.links.related)}?include=tasks`
 
 export const listWithTasksPathname = (listId) =>
   `/api/v1/lists/${listId}?include=tasks`

@@ -3,6 +3,7 @@ class TaskResource < ApplicationResource
   attribute :completed_at, :datetime
   attribute :created_at, :datetime, writable: false
   attribute :updated_at, :datetime, writable: false
+  attribute :position, :integer
 
   attribute :new_position, :integer, only: [:writable]
 

@@ -21,33 +21,32 @@ const SortableContainer = sortableContainer(({ children, beingSorted }) => {
 
 const SortableListItems = (props) => {
   const [beingSorted, setBeingSorted] = useState(false)
+
   const [listItems, setListItems] = useState(props.listItems)
+  useEffect(() => {
+    setListItems(props.listItems), [props.listItems, beingSorted]
+  })
+
   const [newItem, setNewItem] = useState(null)
   const { mutate } = useSWRConfig()
 
-  const onSortStart = () => {
+  const handleSortStart = () => {
     setBeingSorted(true)
   }
 
-  const onSortEnd = async ({ oldIndex, newIndex }) => {
-    if (oldIndex === newIndex) {
-      return
-    }
-
-    try {
-      const previousListItems = listItems
-      setListItems(arrayMove(listItems, oldIndex, newIndex))
-
-      const updatedTaskResource = await changeTaskPostition(
-        previousListItems[oldIndex],
-        newIndex
-      )
-
-      mutate(owningListPathname(updatedTaskResource.data))
-    } finally {
-      setBeingSorted(false)
-    }
-  }
+  const handleSortEnd = useCallback(
+    async ({ oldIndex, newIndex }) => {
+      if (oldIndex === newIndex) {
+        return
+      }
+      try {
+        props.onSortEnd(listItems, oldIndex, newIndex)
+      } finally {
+        setBeingSorted(false)
+      }
+    },
+    [listItems]
+  )
 
   const onNewItemCreated = useCallback(
     (newItemResource) => {
@@ -60,19 +59,16 @@ const SortableListItems = (props) => {
     [listItems]
   )
 
-  const handleTaskDestroyed = useCallback(
-    (task) => {
-      setListItems((currentListItems) =>
-        currentListItems.filter((item) => item.id !== task.id)
-      )
-    },
-    [listItems]
-  )
+  const handleTaskDestroyed = useCallback((task) => {
+    setListItems((currentListItems) =>
+      currentListItems.filter((item) => item.id !== task.id)
+    )
+  }, [])
 
   return (
     <SortableContainer
-      onSortStart={onSortStart}
-      onSortEnd={onSortEnd}
+      onSortStart={handleSortStart}
+      onSortEnd={handleSortEnd}
       beingSorted={beingSorted}
       useDragHandle
     >

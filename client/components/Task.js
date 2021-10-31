@@ -20,6 +20,11 @@ const Task = (props) => {
   const { task, onTaskDestroyed } = props
   const [checked, setChecked] = useState(task.attributes.completed)
   const [text, setText] = useState(task.attributes.name)
+  useEffect(() => {
+    setChecked(task.attributes.completed)
+    setText(task.attributes.name)
+  }, [task])
+
   const [mode, setMode] = useState(props.mode)
   const { mutate } = useSWRConfig()
   const checkBoxId = `task_${task.id}_checkbox`
