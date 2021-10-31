@@ -1,5 +1,9 @@
 .task_text {
   white-space: pre-wrap;
+  p {
+    margin: 0px;
+    padding: 0px;
+  }
 }
 
 .task_text__edit {

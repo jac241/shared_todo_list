@@ -21,3 +21,15 @@
     visibility: visible;
   }
 }
+
+.task__dragging {
+  box-shadow: none;
+
+  .delete {
+    visibility: hidden;
+  }
+}
+
+.dragHandle {
+  cursor: row-resize;
+}

@@ -83,6 +83,7 @@ const SortableListItems = (props) => {
           task={listItem}
           mode={newItem?.id === listItem?.id ? "edit" : "display"}
           onTaskDestroyed={handleTaskDestroyed}
+          beingSorted={beingSorted}
         />
       ))}
       <NewItem
@@ -93,20 +94,21 @@ const SortableListItems = (props) => {
   )
 }
 
+const TaskItem = sortableElement((props) => {
+  const taskStyles = props.beingSorted ? styles.task__dragging : styles.task
+  const classes = `d-flex flex-row p-2 ${taskStyles}`
+  return (
+    <li className={classes} style={{ columnGap: "1rem" }}>
+      <DragHandle />
+      <Task {...props} />
+    </li>
+  )
+})
+
 const DragHandle = sortableHandle((props) => (
-  <span {...props}>
+  <span className={styles.dragHandle} {...props}>
     <FontAwesomeIcon icon={faGripVertical} />
   </span>
-))
-
-const TaskItem = sortableElement((props) => (
-  <li
-    className={"d-flex flex-row p-2 " + styles.task}
-    style={{ columnGap: "1rem" }}
-  >
-    <DragHandle />
-    <Task {...props} />
-  </li>
 ))
 
 export default SortableListItems

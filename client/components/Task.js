@@ -2,11 +2,19 @@ import { useSWRConfig } from "swr"
 import { useCallback, useEffect, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
+import dynamic from "next/dynamic"
+import DOMPurify from "dompurify"
 
 import { patchTask, toggleTaskCompleted, destroyTask } from "../data/tasks"
 import { pathname } from "../data/http"
 import styles from "./Task.module.scss"
 import sortableListItemStyles from "./SortableListItems.module.scss"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrash } from "@fortawesome/free-solid-svg-icons"
+
+const TaskTextEditor = dynamic(() => import("./lists/TaskTextEditor"), {
+  ssr: false,
+})
 
 const Task = (props) => {
   const { task, onTaskDestroyed } = props
@@ -17,16 +25,14 @@ const Task = (props) => {
   const checkBoxId = `task_${task.id}_checkbox`
   const checkRef = useRef(null)
 
-  const handleClosingEditMode = async (containerElement) => {
-    const newText = containerElement.children[0].value
-    setMode("display")
-    // text has initial value of text in the callback's closure
-    if (text == newText) {
-      return
-    }
-    console.log(newText)
-    await patchTask(task, { name: newText })
-  }
+  const handleClosingEditMode = useCallback(
+    async (html) => {
+      setMode("display")
+      setText(html)
+      await patchTask(task, { name: html })
+    },
+    [setMode, setText]
+  )
 
   let inner = null
   switch (mode) {
@@ -35,24 +41,18 @@ const Task = (props) => {
         <label
           className={"form-check-label " + styles.task_text}
           htmlFor={checkBoxId}
-        >
-          {text}
-        </label>
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }}
+        />
       )
       break
     case "edit":
       inner = (
-        <DetectClickOutside onOutsideClick={handleClosingEditMode}>
-          <Form.Control
-            className={styles.task_text__edit}
-            autoFocus
-            as="textarea"
-            value={text}
-            onChange={(event) => {
-              setText(event.target.value)
-            }}
-          />
-        </DetectClickOutside>
+        //<TaskTextArea
+        //text={text}
+        //setText={setText}
+        //handleClosingEditMode={handleClosingEditMode}
+        ///>
+        <TaskTextEditor html={text} onEditingFinished={handleClosingEditMode} />
       )
       break
     default:
@@ -98,6 +98,31 @@ Task.defaultProps = {
   mode: "display",
 }
 
+const TaskTextArea = ({ text, setText, handleClosingEditMode }) => {
+  const closeIfReturn = useCallback(
+    (event) => {
+      if (event.keyCode == 13 && !event.shiftKey) {
+        handleClosingEditMode()
+      }
+    },
+    [handleClosingEditMode]
+  )
+  return (
+    <DetectClickOutside onOutsideClick={handleClosingEditMode}>
+      <Form.Control
+        className={styles.task_text__edit}
+        autoFocus
+        as="textarea"
+        value={text}
+        onChange={(event) => {
+          setText(event.target.value)
+        }}
+        onKeyDown={closeIfReturn}
+      />
+    </DetectClickOutside>
+  )
+}
+
 const DetectClickOutside = (props) => {
   const wrapperRef = useRef(null)
   useOutsideAlerter(wrapperRef, props.onOutsideClick)
@@ -117,14 +142,13 @@ const useOutsideAlerter = (ref, callback) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [ref])
+  }, [ref, callback])
 }
 
 const DeleteTaskButton = ({ task, onTaskDestroyed }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleClick = useCallback(async () => {
-    console.log("cliccked")
     setIsLoading(true)
     await destroyTask(task)
     onTaskDestroyed(task)
@@ -138,7 +162,7 @@ const DeleteTaskButton = ({ task, onTaskDestroyed }) => {
       disabled={isLoading}
       onClick={handleClick}
     >
-      X
+      <FontAwesomeIcon icon={faTrash} />
     </Button>
   )
 }
