@@ -47,11 +47,6 @@ const Task = (props) => {
       break
     case "edit":
       inner = (
-        //<TaskTextArea
-        //text={text}
-        //setText={setText}
-        //handleClosingEditMode={handleClosingEditMode}
-        ///>
         <TaskTextEditor html={text} onEditingFinished={handleClosingEditMode} />
       )
       break
@@ -96,53 +91,6 @@ const Task = (props) => {
 
 Task.defaultProps = {
   mode: "display",
-}
-
-const TaskTextArea = ({ text, setText, handleClosingEditMode }) => {
-  const closeIfReturn = useCallback(
-    (event) => {
-      if (event.keyCode == 13 && !event.shiftKey) {
-        handleClosingEditMode()
-      }
-    },
-    [handleClosingEditMode]
-  )
-  return (
-    <DetectClickOutside onOutsideClick={handleClosingEditMode}>
-      <Form.Control
-        className={styles.task_text__edit}
-        autoFocus
-        as="textarea"
-        value={text}
-        onChange={(event) => {
-          setText(event.target.value)
-        }}
-        onKeyDown={closeIfReturn}
-      />
-    </DetectClickOutside>
-  )
-}
-
-const DetectClickOutside = (props) => {
-  const wrapperRef = useRef(null)
-  useOutsideAlerter(wrapperRef, props.onOutsideClick)
-  return <div ref={wrapperRef}>{props.children}</div>
-}
-
-const useOutsideAlerter = (ref, callback) => {
-  // https://stackoverflow.com/questions/32553158/detect-click-outside-react-component
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        callback(ref.current)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [ref, callback])
 }
 
 const DeleteTaskButton = ({ task, onTaskDestroyed }) => {

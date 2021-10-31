@@ -1,10 +1,4 @@
-import dynamic from "next/dynamic"
-import {
-  ContentState,
-  convertToRaw,
-  EditorState,
-  getDefaultKeyBinding,
-} from "draft-js"
+import { ContentState, convertToRaw, EditorState } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import htmlToDraft from "html-to-draftjs"
 import { useCallback, useEffect, useState, useRef } from "react"
@@ -12,13 +6,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import styles from "./TaskTextEditor.module.scss"
 
 import { Editor } from "react-draft-wysiwyg"
-
-//<TaskTextArea
-//text={text}
-//setText={setText}
-//handleClosingEditMode={handleClosingEditMode}
-///>
-//
 
 const TaskTextEditor = ({ html, onEditingFinished }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -36,21 +23,9 @@ const TaskTextEditor = ({ html, onEditingFinished }) => {
     const html = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     ).trim()
-    console.log(html)
     onEditingFinished(html)
   }, [editorState, onEditingFinished])
 
-  const closeIfReturn = useCallback(
-    (event) => {
-      if (event.keyCode == 13 && !event.shiftKey) {
-        handleClosingEditMode()
-      }
-
-      return getDefaultKeyBinding(event)
-    },
-    [handleClosingEditMode]
-  )
-  console.log(styles.taskTextEditor)
   return (
     <DetectClickOutside onOutsideClick={handleClosingEditMode}>
       <div className="editor">
@@ -78,13 +53,7 @@ const TaskTextEditor = ({ html, onEditingFinished }) => {
             textAlign: { inDropdown: true },
             link: { inDropdown: true },
             history: { inDropdown: false },
-            fontFamily: false,
-            //image: {
-            //uploadCallback: uploadImageCallBack,
-            //alt: { present: true, mandatory: true },
-            //},
           }}
-          keyBindingFn={closeIfReturn}
         />
       </div>
     </DetectClickOutside>
