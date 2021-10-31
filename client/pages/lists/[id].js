@@ -9,7 +9,7 @@ import client from "../../data/http"
 import SkeletonList from "../../components/lists/SkeletonList"
 import { useCallback } from "react"
 import arrayMove from "array-move"
-import { changeTaskPostition } from "../../data/tasks"
+import { changeTaskPostition, destroyTask } from "../../data/tasks"
 
 const fetcher = (url) => client.get(url).then((r) => r.data)
 
@@ -36,7 +36,8 @@ const List = () => {
     mutate,
   } = useSWR(id && listURL(id), fetcher)
 
-  const tasks = listResource?.included || [] // sideloaded objects can be undefined
+  const listItems = listResource?.included || [] // sideloaded objects can be undefined
+
   const handleSortEnd = useCallback(
     async (listItems, oldIndex, newIndex) => {
       const newlistItems = arrayMove(listItems, oldIndex, newIndex).map(
@@ -52,6 +53,17 @@ const List = () => {
       mutate()
     },
     [listResource]
+  )
+  const handleTaskDestroyed = useCallback(
+    async (itemToDelete) => {
+      const newListItems = listItems.filter(
+        (item) => item.id !== itemToDelete.id
+      )
+      mutate({ ...listResource, included: newListItems }, false)
+      await destroyTask(itemToDelete)
+      mutate()
+    },
+    [listResource, listItems]
   )
 
   if (error) {
@@ -71,7 +83,8 @@ const List = () => {
         <SortableListItems
           onSortEnd={handleSortEnd}
           parentList={listResource.data}
-          listItems={tasks}
+          listItems={listItems}
+          onTaskDestroyed={handleTaskDestroyed}
         />
       </Card.Body>
     </Card>

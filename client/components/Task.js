@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form"
 import dynamic from "next/dynamic"
 import DOMPurify from "dompurify"
 
-import { patchTask, toggleTaskCompleted, destroyTask } from "../data/tasks"
+import { patchTask, toggleTaskCompleted } from "../data/tasks"
 import { pathname } from "../data/http"
 import styles from "./Task.module.scss"
 import sortableListItemStyles from "./SortableListItems.module.scss"
@@ -103,7 +103,6 @@ const DeleteTaskButton = ({ task, onTaskDestroyed }) => {
 
   const handleClick = useCallback(async () => {
     setIsLoading(true)
-    await destroyTask(task)
     onTaskDestroyed(task)
   }, [task])
 

@@ -6,14 +6,10 @@ import {
 } from "react-sortable-hoc"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons"
-import arrayMove from "array-move"
 
 import styles from "./SortableListItems.module.scss"
-import taskStyles from "./Task.module.scss"
 import Task from "./Task"
 import NewItem from "./lists/NewItem"
-import { changeTaskPostition, owningListPathname } from "../data/tasks"
-import { useSWRConfig } from "swr"
 
 const SortableContainer = sortableContainer(({ children, beingSorted }) => {
   return <ul className={beingSorted ? styles.sorting : ""}> {children} </ul>
@@ -28,7 +24,6 @@ const SortableListItems = (props) => {
   })
 
   const [newItem, setNewItem] = useState(null)
-  const { mutate } = useSWRConfig()
 
   const handleSortStart = () => {
     setBeingSorted(true)
@@ -59,12 +54,6 @@ const SortableListItems = (props) => {
     [listItems]
   )
 
-  const handleTaskDestroyed = useCallback((task) => {
-    setListItems((currentListItems) =>
-      currentListItems.filter((item) => item.id !== task.id)
-    )
-  }, [])
-
   return (
     <SortableContainer
       onSortStart={handleSortStart}
@@ -78,7 +67,7 @@ const SortableListItems = (props) => {
           index={index}
           task={listItem}
           mode={newItem?.id === listItem?.id ? "edit" : "display"}
-          onTaskDestroyed={handleTaskDestroyed}
+          onTaskDestroyed={props.onTaskDestroyed}
           beingSorted={beingSorted}
         />
       ))}
